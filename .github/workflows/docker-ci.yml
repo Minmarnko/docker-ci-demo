@@ -1,0 +1,33 @@
+name: Docker CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Docker image
+      run: |
+        docker build -t data-pipeline .
+
+    - name: Run pipeline
+      run: |
+        docker run data-pipeline python pipeline.py
+
+    - name: Verify output files
+      run: |
+        if [ ! -f "/app/cleaned_data.csv" ]; then echo "Missing cleaned_data.csv"; exit 1; fi
+        if [ ! -f "/app/age_distribution.png" ]; then echo "Missing age_distribution.png"; exit 1; fi
