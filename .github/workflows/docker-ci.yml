@@ -23,13 +23,13 @@ jobs:
       run: |
         docker build -t data-pipeline .
 
-    - name: List filesin /app (for debugging)
-      run: |
-        docker run data-pipeline ls /app
-
     - name: Run pipeline
       run: |
         docker run data-pipeline python pipeline.py
+
+    - name: List files in /app (for debugging)
+      run: |
+        docker run data-pipeline ls /app
 
     - name: Verify output files
       run: |
